@@ -57,9 +57,23 @@ These metrics matter for this task because the three labels can look similar on 
 
 ## 6. Definition of success
 
-A genuinely useful classifier should:
-- Get clearly better accuracy than the zero-shot baseline (Groq's llama-3.3-70b-versatile), since that is the whole point of fine-tuning.
-- Have no label with very low recall (for example, under 50%), because a label the model basically never predicts correctly is not usable in a real tool.
-- Make mistakes that are understandable, not random — when I read the wrong predictions, the confusion should mostly happen between labels that are genuinely close (like anecdote vs. argument), not random mixing of all three.
+I want these criteria to be things I can check with a yes/no answer at the end, not just a feeling. So here are exact numbers, checked against my test set:
 
-"Good enough for deployment" in a real community tool would mean: overall accuracy noticeably above the baseline, F1 above roughly 0.7 for every label, and wrong predictions that a human moderator could quickly explain by reading the post. It does not need to be perfect, because even a model that is right most of the time can help moderators sort posts faster than reading everything themselves.
+- **Beats the baseline:** the fine-tuned model's overall accuracy is at least 10 percentage points higher than the Groq zero-shot baseline's accuracy on the same test set. (Pass/fail: yes or no, read directly from the evaluation report.)
+- **No weak label:** every label has recall of at least 0.60 and F1 of at least 0.65 for the fine-tuned model. (Pass/fail: check each row of the per-label table.)
+- **Confusion is explainable:** when I list the wrong predictions, at least 80% of them are confusions between two labels that I already flagged as hard edge cases in Section 3 (anecdote vs. argument, or lore vs. argument). If most wrong predictions are something else entirely (like lore vs. anecdote, which should not be confusing), that's a sign something is wrong with the labels or the data, not just a hard task.
+
+"Good enough for deployment" means hitting all three checks above. If the model beats the baseline but misses on the recall/F1 check or the confusion check, I will treat that as a partial success and say so directly in the evaluation report, rather than rounding up. It does not need to be perfect — even a model that is right most of the time, with explainable mistakes, can help moderators sort posts faster than reading everything themselves.
+
+## 7. AI Tool Plan
+
+This project has no code-generation step like the implementation projects, so AI tools help in three specific spots: stress-testing my labels, speeding up annotation, and finding patterns in errors.
+
+### Label stress-testing
+Before I annotate 200 examples, I will give an AI tool (Claude) my three label definitions and my Section 3 edge cases, and ask it to write 5–10 short posts that sit right on the boundary between two labels (for example, 3 anecdote-vs-argument posts, 3 lore-vs-argument posts, a couple of anecdote-vs-lore posts even though I think that pair is unlikely to overlap). I will then try to label each one myself using only my written definitions, with no extra context. If I can't label a generated post cleanly, that tells me my definitions are not tight enough, and I will rewrite them before I start the real 200-example annotation.
+
+### Annotation assistance
+I will use an LLM (Groq's llama-3.3-70b-versatile, same model as my baseline) to pre-label a first pass over my collected posts, using my label definitions as the prompt. I will not just accept these labels — I will review every single one myself and correct any that are wrong, since the whole point of the dataset is that it reflects my own judgment, not the LLM's. To track this for disclosure, I will add a column to my dataset CSV called `pre_labeled_by_llm` (true/false) so it's clear in the final dataset which examples started from an LLM suggestion versus which I labeled from scratch.
+
+### Failure analysis
+After I get my test set predictions, I will give the AI tool the full list of wrong predictions (post text, true label, predicted label) and ask it to identify any systematic pattern — for example, "the model struggles with short posts," "the model confuses anecdote and argument when the post mentions dreams," or "the model is biased toward the majority label." I will not put this pattern directly into my evaluation report. Instead, I will go back to the actual wrong examples myself, re-read them, and check whether the suggested pattern actually holds up across most of the errors, or if the AI tool overgeneralized from just one or two examples. Only patterns I've personally verified against the real misclassified posts go into the final report.
