@@ -47,8 +47,6 @@ My goal is at least 200 examples total, with at least 20% (about 40 examples) pe
 
 ## 5. Evaluation metrics
 
-Accuracy alone is not enough, because if one label has more examples than the others, a model could get high accuracy just by guessing the biggest label every time. So I will also report:
-
 - **Precision and recall per label**, so I can see if the model is bad at one specific label even if it looks good overall.
 - **A confusion matrix**, so I can see which labels the model mixes up with each other (for example, mixing up `personal_anecdote` and `philosophical_argument`).
 - **F1 score per label**, since it balances precision and recall in one number, which is useful for comparing labels side by side.
@@ -57,8 +55,6 @@ These metrics matter for this task because the three labels can look similar on 
 
 ## 6. Definition of success
 
-I want these criteria to be things I can check with a yes/no answer at the end, not just a feeling. So here are exact numbers, checked against my test set:
-
 - **Beats the baseline:** the fine-tuned model's overall accuracy is at least 10 percentage points higher than the Groq zero-shot baseline's accuracy on the same test set. (Pass/fail: yes or no, read directly from the evaluation report.)
 - **No weak label:** every label has recall of at least 0.60 and F1 of at least 0.65 for the fine-tuned model. (Pass/fail: check each row of the per-label table.)
 - **Confusion is explainable:** when I list the wrong predictions, at least 80% of them are confusions between two labels that I already flagged as hard edge cases in Section 3 (anecdote vs. argument, or lore vs. argument). If most wrong predictions are something else entirely (like lore vs. anecdote, which should not be confusing), that's a sign something is wrong with the labels or the data, not just a hard task.
@@ -66,8 +62,6 @@ I want these criteria to be things I can check with a yes/no answer at the end, 
 "Good enough for deployment" means hitting all three checks above. If the model beats the baseline but misses on the recall/F1 check or the confusion check, I will treat that as a partial success and say so directly in the evaluation report, rather than rounding up. It does not need to be perfect — even a model that is right most of the time, with explainable mistakes, can help moderators sort posts faster than reading everything themselves.
 
 ## 7. AI Tool Plan
-
-This project has no code-generation step like the implementation projects, so AI tools help in three specific spots: stress-testing my labels, speeding up annotation, and finding patterns in errors.
 
 ### Label stress-testing
 Before I annotate 200 examples, I will give an AI tool (Claude) my three label definitions and my Section 3 edge cases, and ask it to write 5–10 short posts that sit right on the boundary between two labels (for example, 3 anecdote-vs-argument posts, 3 lore-vs-argument posts, a couple of anecdote-vs-lore posts even though I think that pair is unlikely to overlap). I will then try to label each one myself using only my written definitions, with no extra context. If I can't label a generated post cleanly, that tells me my definitions are not tight enough, and I will rewrite them before I start the real 200-example annotation.
