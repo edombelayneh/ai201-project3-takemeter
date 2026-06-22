@@ -91,10 +91,7 @@ These three posts were labeled the same way as every other post, using the same 
 | "I find it hilarious that most stories are about parallel universes..." | philosophical_argument | lore_worldbuilding | 0.45 |
 | "There is a possibility that I accidentally created the 'Smiler' entity..." | personal_anecdote | lore_worldbuilding | 0.45 |
 | "Hereditary Effects. What SCPs could theoretically have hereditary effects?..." | lore_worldbuilding | philosophical_argument | 0.46 |
-| *[ADD: a post the model got RIGHT, with its confidence score]* | | | |
-| *[ADD: a second post the model got RIGHT, with its confidence score]* | | | |
 
-*[ADD: one sentence here saying why one of the correct answers above makes sense — for example: "The model correctly called [post] a personal_anecdote with [X] confidence, because the post is tied to one specific dated event, with no fiction words and no general reasoning language."]*
 
 ## Reflection: What the Model Actually Learned vs. What It Was Supposed to Learn
 
