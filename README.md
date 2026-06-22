@@ -58,11 +58,8 @@ The fine-tuned model's weakest score is `lore_worldbuilding` precision (0.78). T
 
 ### Confusion Matrix (Fine-Tuned Model, Test Posts)
 
-| Real label ↓ / Model said → | personal_anecdote | philosophical_argument | lore_worldbuilding |
-|---|---|---|---|
-| **personal_anecdote** | 8 | 0 | 1 |
-| **philosophical_argument** | 0 | 7 | 1 |
-| **lore_worldbuilding** | 0 | 1 | 7 |
+<img width="619" height="490" alt="download" src="https://github.com/user-attachments/assets/0928bf88-d70a-478e-bdbf-026ce2d50aa0" />
+
 
 ### The Wrong Answers, Explained
 
