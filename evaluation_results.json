@@ -1,0 +1,12 @@
+{
+  "baseline_accuracy": 0.96,
+  "finetuned_accuracy": 0.88,
+  "improvement": -0.08,
+  "test_set_size": 25,
+  "label_map": {
+    "personal_anecdote": 0,
+    "philosophical_argument": 1,
+    "lore_worldbuilding": 2
+  },
+  "model": "distilbert-base-uncased"
+}
